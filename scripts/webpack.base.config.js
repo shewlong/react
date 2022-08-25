@@ -1,11 +1,13 @@
-
 const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HappyPack = require('happypack')
 const os = require('os')
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
+const happyThreadPool = HappyPack.ThreadPool({
+  size: os.cpus().length
+})
 const devMode = process.env.NODE_ENV !== 'production'
+
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
 }
@@ -15,12 +17,12 @@ const webpackConfigBase = {
     client: resolve('../app/client.js'),
   },
   output: {
-    path: resolve('../dist'),
-    filename: devMode ?'js/[name].[hash].js' : 'js/[name].[contenthash].js',
-    chunkFilename: devMode ? 'chunks/[name].[hash:4].js':'chunks/[name].[contenthash].js',
+    path: resolve('../docs'),
+    filename: devMode ? 'js/[name].[hash].js' : 'js/[name].[contenthash].js',
+    chunkFilename: devMode ? 'chunks/[name].[hash:4].js' : 'chunks/[name].[contenthash].js',
     // publicPath: './'
   },
-  resolve: {// 减少后缀
+  resolve: { // 减少后缀
     extensions: ['.js', '.jsx', '.json'],
     // modules: [ // 指定以下目录寻找第三方模块，避免webpack往父级目录递归搜索
     //   resolve('app'),
@@ -78,8 +80,8 @@ const webpackConfigBase = {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
           // minChunks: 1,
-          priority: -10,// 确定模块打入的优先级
-          reuseExistingChunk: true,// 使用复用已经存在的模块
+          priority: -10, // 确定模块打入的优先级
+          reuseExistingChunk: true, // 使用复用已经存在的模块
           enforce: true,
         },
         //  antd: {
@@ -105,8 +107,7 @@ const webpackConfigBase = {
   },
   module: {
     // noParse: /lodash/,
-    rules: [
-      {
+    rules: [{
         test: /\.js[x]?$/,
         exclude: /node_modules/,
         include: [resolve('../app')],
@@ -116,8 +117,7 @@ const webpackConfigBase = {
       },
       {
         test: /\.(css|less)$/,
-        use: [
-          {
+        use: [{
             loader: MiniCssExtractPlugin.loader,
             options: {
               hmr: devMode,
@@ -154,8 +154,8 @@ const webpackConfigBase = {
     // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|fr|hu/),
 
     new MiniCssExtractPlugin({
-      filename: devMode ? 'css/style.css':'css/style.[contenthash].css',
-      chunkFilename: devMode ? 'css/style.[id].css':'css/style.[contenthash].[id].css'
+      filename: devMode ? 'css/style.css' : 'css/style.[contenthash].css',
+      chunkFilename: devMode ? 'css/style.[id].css' : 'css/style.[contenthash].[id].css'
     }),
 
     new HappyPack({
@@ -178,8 +178,7 @@ const webpackConfigBase = {
       //用id来标识 happypack处理那里类文件
       id: 'happyStyle',
       //如何处理  用法和loader 的配置一样
-      loaders: [
-        {
+      loaders: [{
           loader: 'css-loader',
           options: {
             importLoaders: 2, // 之前有2个loaders
@@ -190,7 +189,7 @@ const webpackConfigBase = {
         {
           loader: 'postcss-loader',
           options: {
-            sourceMap: true,//为true,在样式追溯时，显示的是编写时的样式，为false，则为编译后的样式
+            sourceMap: true, //为true,在样式追溯时，显示的是编写时的样式，为false，则为编译后的样式
           }
         },
         {
